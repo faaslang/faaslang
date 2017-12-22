@@ -1,7 +1,6 @@
 /**
 * Comment for the function is here
-* @bg params 
-* data 
+* @bg value challenge.hub notused
 * @returns {string}
 */
 module.exports = (callback) => {
