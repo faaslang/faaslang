@@ -514,45 +514,27 @@ module.exports = (expect) => {
     });
   });
 
-  it('Should run a background function with bg mode "params" looking for a specific parameter', done => {
-    request('POST', {}, '/bg/paramsSpecific1/:bg', {data: 'xxx', discarded: 'xxx'}, (err, res, result) => {
+  it('Should run a background function with bg mode "param" looking for a specific parameter', done => {
+    request('POST', {}, '/bg/param/:bg', {'challenge.hub': 'xxx', discarded: 'xxx'}, (err, res, result) => {
 
       expect(err).to.not.exist;
       expect(res.statusCode).to.equal(202);
       expect(result).to.exist;
-      expect(result).to.be.an('object');
-      expect(result).to.haveOwnProperty('data');
-      expect(result).to.not.haveOwnProperty('discarded');
-      expect(result.data).to.equal('xxx');
+      expect(result).to.be.instanceof(Buffer);
+      expect(result.toString()).to.equal('xxx');
       done();
 
     });
   });
 
-  it('Should run a background function with bg mode "params" looking for two specific parameters', done => {
-    request('POST', {}, '/bg/paramsSpecific2/:bg', {data: 'xxx', otherdata: 'xxx', discarded: 'xxx'}, (err, res, result) => {
+  it('Should run a background function with bg mode "param" looking for a specific parameter and not find it', done => {
+    request('POST', {}, '/bg/param/:bg', {data: 'xxx'}, (err, res, result) => {
 
       expect(err).to.not.exist;
       expect(res.statusCode).to.equal(202);
       expect(result).to.exist;
-      expect(result).to.be.an('object');
-      expect(result).to.haveOwnProperty('data');
-      expect(result).to.haveOwnProperty('otherdata');
-      expect(result.data).to.equal('xxx');
-      expect(result.otherdata).to.equal('xxx');
-      done();
-
-    });
-  });
-
-  it('Should run a background function with bg mode "params" looking for specific param that is not there', done => {
-    request('POST', {}, '/bg/paramsSpecific3/:bg', {otherdata: 'xxx'}, (err, res, result) => {
-
-      expect(err).to.not.exist;
-      expect(res.statusCode).to.equal(202);
-      expect(result).to.exist;
-      expect(result).to.be.an('object');
-      expect(result).to.not.haveOwnProperty('data');
+      expect(result).to.be.instanceof(Buffer);
+      expect(result.toString()).to.equal('');
       done();
 
     });
