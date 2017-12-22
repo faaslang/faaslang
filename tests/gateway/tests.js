@@ -514,27 +514,37 @@ module.exports = (expect) => {
     });
   });
 
-  it('Should run a background function with bg mode "param" looking for a specific parameter', done => {
-    request('POST', {}, '/bg/param/:bg', {'challenge.hub': 'xxx', discarded: 'xxx'}, (err, res, result) => {
+  it('Should run a background function with bg mode "value" looking for a specific parameter', done => {
+    request('POST', {}, '/bg/value/:bg', {'challenge.hub': 'xxx', discarded: 'yyy'}, (err, res, result) => {
 
       expect(err).to.not.exist;
       expect(res.statusCode).to.equal(202);
       expect(result).to.exist;
-      expect(result).to.be.instanceof(Buffer);
-      expect(result.toString()).to.equal('xxx');
+      expect(result).to.equal('xxx');
       done();
 
     });
   });
 
-  it('Should run a background function with bg mode "param" looking for a specific parameter and not find it', done => {
-    request('POST', {}, '/bg/param/:bg', {data: 'xxx'}, (err, res, result) => {
+  it('Should run a background function with bg mode "value" with a number parameter', done => {
+    request('POST', {}, '/bg/value/:bg', {'challenge.hub': '12345'}, (err, res, result) => {
 
       expect(err).to.not.exist;
       expect(res.statusCode).to.equal(202);
       expect(result).to.exist;
-      expect(result).to.be.instanceof(Buffer);
-      expect(result.toString()).to.equal('');
+      expect(result).to.equal(12345);
+      done();
+
+    });
+  });
+
+  it('Should run a background function with bg mode "value" looking for a specific parameter and not find it', done => {
+    request('POST', {}, '/bg/value/:bg', {data: 'xxx'}, (err, res, result) => {
+
+      expect(err).to.not.exist;
+      expect(res.statusCode).to.equal(202);
+      expect(result).to.exist;
+      expect(result).to.equal('');
       done();
 
     });
