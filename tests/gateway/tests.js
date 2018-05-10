@@ -114,6 +114,19 @@ module.exports = (expect) => {
     });
   });
 
+  it('Should give 200 OK and property headers for HEAD', done => {
+    request('HEAD', {}, '/my_function/', {}, (err, res, result) => {
+
+      expect(err).to.not.exist;
+      expect(res.statusCode).to.equal(200);
+      expect(res.headers).to.haveOwnProperty('access-control-allow-origin');
+      expect(res.headers).to.haveOwnProperty('access-control-allow-headers');
+      expect(res.headers).to.haveOwnProperty('access-control-expose-headers');
+      done();
+
+    });
+  });
+
   it('Should return 200 OK when no Content-Type specified on GET', done => {
     request('GET', {}, '/my_function/', undefined, (err, res, result) => {
 
@@ -1036,6 +1049,20 @@ module.exports = (expect) => {
       })
 
     })
+  });
+
+  it('Should handle large buffer parameters', done => {
+    request('POST', {'x-convert-strings': true}, '/runtime/largebuffer/', {
+      file: `{"_base64": "${'a'.repeat(50000000)}"}`
+    }, (err, res, result) => {
+
+      expect(err).to.not.exist;
+      expect(res.statusCode).to.equal(200);
+      expect(result).to.exist;
+      expect(result.error).to.not.exist;
+      done();
+
+    });
   });
 
   after(() => FaaSGateway.close());
